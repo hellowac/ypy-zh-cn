@@ -1,23 +1,30 @@
-from typing import (Any, Callable, Dict, Iterable, Iterator, List, Literal,
-                    Optional, Tuple, TypedDict, Union)
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+    TypedDict,
+    Union,
+)
 
 class SubscriptionId:
     """
-    Tracks an observer callback. Pass this to the `unobserve` method to cancel
-    its associated callback.
+    跟踪观察者回调。将其传递给 `unobserve` 方法以取消其相关的回调。
     """
 
 Event = Union[YTextEvent, YArrayEvent, YMapEvent, YXmlTextEvent, YXmlElementEvent]
 
 class YDoc:
     """
-    A Ypy document type. Documents are most important units of collaborative resources management.
-    All shared collections live within a scope of their corresponding documents. All updates are
-    generated on per document basis (rather than individual shared type). All operations on shared
-    collections happen via YTransaction, which lifetime is also bound to a document.
+    Ypy 文档类型。文档是协作资源管理中最重要的单位。
+    所有共享集合都位于其对应文档的范围内。所有更新都是基于每个文档生成的（而不是单个共享类型）。所有对共享集合的操作都通过 :class:`YTransaction` 进行，其生命周期也与文档相关。
 
-    Document manages so called root types, which are top-level shared types definitions (as opposed
-    to recursively nested types).
+    文档管理所谓的根类型(root types)，这些是 顶层共享类型定义(top-level shared types definitions)（与递归嵌套类型相对）。
 
     Example::
 
@@ -39,20 +46,17 @@ class YDoc:
         skip_gc: bool = False,
     ):
         """
-        Creates a new Ypy document. If `client_id` parameter was passed it will be used as this
-        document globally unique identifier (it's up to caller to ensure that requirement).
-        Otherwise it will be assigned a randomly generated number.
+        创建一个新的 Ypy 文档。如果传递了 `client_id` 参数，则将其用作该文档的全局唯一标识符（由调用者确保该要求）。
+        否则，将分配一个随机生成的数字。
         """
     def begin_transaction(self) -> YTransaction:
         """
 
         Returns:
-            A new transaction for this document. Ypy shared data types execute their
-            operations in a context of a given transaction. Each document can have only one active
-            transaction at the time - subsequent attempts will cause exception to be thrown.
+            此文档的新事务。Ypy 共享数据类型在给定事务的上下文中执行其操作。
+            每个文档一次只能有一个活动事务 - 后续尝试将导致异常被抛出。
 
-        Transactions started with `doc.begin_transaction` can be released by deleting the transaction object
-        method.
+        使用 :meth:`~YDoc.begin_transaction` 开始的事务可以通过删除事务对象来释放。
 
         Example::
 
@@ -67,77 +71,70 @@ class YDoc:
     def get_map(self, name: str) -> YMap:
         """
         Returns:
-            A `YMap` shared data type, that's accessible for subsequent accesses using given `name`.
+            一个 :class:`YMap` 共享数据类型，可以使用给定的 :arg:`name` 进行后续访问。
 
-        If there was no instance with this name before, it will be created and then returned.
+        如果之前没有该名称的实例，将创建并返回它。
 
-        If there was an instance with this name, but it was of different type, it will be projected
-        onto `YMap` instance.
+        如果之前存在该名称的实例，但它是不同的类型，将投影到 `YMap` 实例上。
         """
     def get_xml_element(self, name: str) -> YXmlElement:
         """
         Returns:
-            A `YXmlElement` shared data type, that's accessible for subsequent accesses using given `name`.
+            一个 :class:`YXmlElement` 共享数据类型，可以使用给定的 `name` 进行后续访问。
 
-        If there was no instance with this name before, it will be created and then returned.
+        如果之前没有该名称的实例，将创建并返回它。
 
-        If there was an instance with this name, but it was of different type, it will be projected
-        onto `YXmlElement` instance.
+        如果之前存在该名称的实例，但它是不同的类型，将投影到 :class:`YXmlElement` 实例上。
         """
     def get_xml_text(self, name: str) -> YXmlText:
         """
         Returns:
-            A `YXmlText` shared data type, that's accessible for subsequent accesses using given `name`.
+            一个 :class:`YXmlText` 共享数据类型，可以使用给定的 `name` 进行后续访问。
 
-        If there was no instance with this name before, it will be created and then returned.
+        如果之前没有该名称的实例，将创建并返回它。
 
-        If there was an instance with this name, but it was of different type, it will be projected
-        onto `YXmlText` instance.
+        如果之前存在该名称的实例，但它是不同的类型，将投影到 :class:`YXmlText` 实例上。
         """
     def get_xml_fragment(self, name: str) -> YXmlFragment:
         """
         Returns:
-            A `YXmlFragment` shared data type, that's accessible for subsequent accesses using given `name`.
+            一个 :class:`YXmlFragment` 共享数据类型，可以使用给定的 `name` 进行后续访问。
 
-        If there was no instance with this name before, it will be created and then returned.
+        如果之前没有该名称的实例，将创建并返回它。
 
-        If there was an instance with this name, but it was of different type, it will be projected
-        onto `YXmlFragment` instance.
+        如果之前存在该名称的实例，但它是不同的类型，将投影到 :class:`YXmlFragment` 实例上。
         """
     def get_array(self, name: str) -> YArray:
         """
-        Returns:
-            A `YArray` shared data type, that's accessible for subsequent accesses using given `name`.
+        Args:
+            一个 :class:`YArray` 共享数据类型，可以使用给定的 `name` 进行后续访问。
 
-        If there was no instance with this name before, it will be created and then returned.
+        如果之前没有该名称的实例，将创建并返回它。
 
-        If there was an instance with this name, but it was of different type, it will be projected
-        onto `YArray` instance.
+        如果之前存在该名称的实例，但它是不同的类型，将投影到 :class:`YArray` 实例上。
         """
     def get_text(self, name: str) -> YText:
         """
 
         Args:
-            name: The identifier for retreiving the text
+            name: 用于检索文本的标识符
         Returns:
-            A `YText` shared data type, that's accessible for subsequent accesses using given `name`.
+            一个 :class:`YText` 共享数据类型，可以使用给定的 `name` 进行后续访问。
 
-        If there was no instance with this name before, it will be created and then returned.
-        If there was an instance with this name, but it was of different type, it will be projected
-        onto `YText` instance.
+        如果之前没有该名称的实例，将创建并返回它。
+        如果之前存在该名称的实例，但它是不同的类型，将投影到 :class:`YText` 实例上。
         """
     def observe_after_transaction(
         self, callback: Callable[[AfterTransactionEvent]]
     ) -> SubscriptionId:
         """
-        Subscribe callback function to updates on the YDoc. The callback will receive encoded state updates and
-        deletions when a document transaction is committed.
+        订阅回调函数以接收 :class:`YDoc` 的更新。当文档事务被提交时，回调将接收编码的状态更新和删除。
 
-        Args:
-            callback: A function that receives YDoc state information affected by the transaction.
+        参数:
+            callback: 接收事务影响的 :py:class:`~y_py.YDoc` 状态信息的函数。
 
         Returns:
-            A subscription identifier that can be used to cancel the callback.
+            一个可以用于取消回调的订阅标识符。
         """
 
 EncodedStateVector = bytes
@@ -146,44 +143,41 @@ YDocUpdate = bytes
 
 class AfterTransactionEvent:
     """
-    Holds transaction update information from a commit after state vectors have been compressed.
+    保存事务更新信息，来自状态向量压缩后的提交。
     """
 
     before_state: EncodedStateVector
     """
-    Encoded state of YDoc before the transaction.
+    事务之前的 :class:`YDoc` 编码状态。
     """
     after_state: EncodedStateVector
     """
-    Encoded state of the YDoc after the transaction.
+    事务之后的 :class:`YDoc` 编码状态。
     """
     delete_set: EncodedDeleteSet
     """
-    Elements deleted by the associated transaction.
+    由相关事务删除的元素。
     """
 
     def get_update(self) -> YDocUpdate:
         """
         Returns:
-            Encoded payload of all updates produced by the transaction.
+            由事务产生的所有更新的编码有效负载。
         """
 
 def encode_state_vector(doc: YDoc) -> EncodedStateVector:
     """
-    Encodes a state vector of a given Ypy document into its binary representation using lib0 v1
-    encoding. State vector is a compact representation of updates performed on a given document and
-    can be used by `encode_state_as_update` on remote peer to generate a delta update payload to
-    synchronize changes between peers.
+    将给定 Ypy 文档的状态向量编码为其二进制表示，使用 lib0 v1 编码。状态向量是对在给定文档上执行的更新的紧凑表示，可以在远程对等体上使用 :meth:`encode_state_as_update` 生成增量更新有效负载，以同步对等体之间的更改。
 
-    Example::
+    示例::
 
         from y_py import YDoc, encode_state_vector, encode_state_as_update, apply_update from y_py
 
-        # document on machine A
+        # 机器 A 上的文档
         local_doc = YDoc()
         local_sv = encode_state_vector(local_doc)
 
-        # document on machine B
+        # 机器 B 上的文档
         remote_doc = YDoc()
         remote_delta = encode_state_as_update(remote_doc, local_sv)
 
@@ -195,20 +189,19 @@ def encode_state_as_update(
     doc: YDoc, vector: Optional[Union[EncodedStateVector, List[int]]] = None
 ) -> YDocUpdate:
     """
-    Encodes all updates that have happened since a given version `vector` into a compact delta
-    representation using lib0 v1 encoding. If `vector` parameter has not been provided, generated
-    delta payload will contain all changes of a current Ypy document, working effectively as its
-    state snapshot.
+    将自给定版本 `vector` 以来发生的所有更新编码为紧凑的增量表示，使用 lib0 v1 编码。
+    如果未提供 `vector` 参数，则生成的增量有效负载将包含当前 Ypy 文档的所有更改，
+    有效地作为其状态快照。
 
-    Example::
+    示例::
 
         from y_py import YDoc, encode_state_vector, encode_state_as_update, apply_update
 
-        # document on machine A
+        # 机器 A 上的文档
         local_doc = YDoc()
         local_sv = encode_state_vector(local_doc)
 
-        # document on machine B
+        # 机器 B 上的文档
         remote_doc = YDoc()
         remote_delta = encode_state_as_update(remote_doc, local_sv)
 
@@ -217,18 +210,17 @@ def encode_state_as_update(
 
 def apply_update(doc: YDoc, diff: Union[YDocUpdate, List[int]]):
     """
-    Applies delta update generated by the remote document replica to a current document. This
-    method assumes that a payload maintains lib0 v1 encoding format.
+    将由远程文档副本生成的增量更新应用于当前文档。此方法假定有效负载保持 lib0 v1 编码格式。
 
-    Example::
+    示例::
 
         from y_py import YDoc, encode_state_vector, encode_state_as_update, apply_update
 
-        # document on machine A
+        # 机器 A 上的文档
         local_doc = YDoc()
         local_sv = encode_state_vector(local_doc)
 
-        # document on machine B
+        # 机器 B 上的文档
         remote_doc = YDoc()
         remote_delta = encode_state_as_update(remote_doc, local_sv)
 
@@ -237,14 +229,12 @@ def apply_update(doc: YDoc, diff: Union[YDocUpdate, List[int]]):
 
 class YTransaction:
     """
-    A transaction that serves as a proxy to document block store. Ypy shared data types execute
-    their operations in a context of a given transaction. Each document can have only one active
-    transaction at the time - subsequent attempts will cause exception to be thrown.
+    作为文档块存储的代理的事务。Ypy 共享数据类型在给定事务的上下文中执行其操作。
+    每个文档一次只能有一个活动事务——后续尝试将导致异常被抛出。
 
-    Transactions started with `doc.begin_transaction` can be released by deleting the transaction object
-    method.
+    使用 :meth:`~YDoc.begin_transaction` 启动的事务可以通过删除事务对象来释放。
 
-    Example::
+    示例::
 
         from y_py import YDoc
         doc = YDoc()
@@ -258,55 +248,53 @@ class YTransaction:
     def get_text(self, name: str) -> YText:
         """
         Returns:
-            A `YText` shared data type, that's accessible for subsequent accesses using given `name`.
+            一个可使用给定 `name` 进行后续访问的 :class:`YText` 共享数据类型。
 
-        If there was no instance with this name before, it will be created and then returned.
+        如果之前没有该名称的实例，则会创建并返回它。
 
-        If there was an instance with this name, but it was of different type, it will be projected
-        onto `YText` instance.
+        如果该名称已有实例，但其类型不同，则会将其投影到 :class:`YText` 实例上。
         """
+
     def get_array(self, name: str) -> YArray:
         """
         Returns:
-            A `YArray` shared data type, that's accessible for subsequent accesses using given `name`.
+            一个可使用给定 `name` 进行后续访问的 :class:`YArray` 共享数据类型。
 
-        If there was no instance with this name before, it will be created and then returned.
+        如果之前没有该名称的实例，则会创建并返回它。
 
-        If there was an instance with this name, but it was of different type, it will be projected
-        onto `YArray` instance.
+        如果该名称已有实例，但其类型不同，则会将其投影到 :class:`YArray` 实例上。
         """
+
     def get_map(self, name: str) -> YMap:
         """
         Returns:
-            A `YMap` shared data type, that's accessible for subsequent accesses using given `name`.
+            一个可使用给定 `name` 进行后续访问的 :class:`YMap` 共享数据类型。
 
-        If there was no instance with this name before, it will be created and then returned.
+        如果之前没有该名称的实例，则会创建并返回它。
 
-        If there was an instance with this name, but it was of different type, it will be projected
-        onto `YMap` instance.
+        如果该名称已有实例，但其类型不同，则会将其投影到 :class:`YMap` 实例上。
         """
+
     def commit(self):
         """
-        Triggers a post-update series of operations without `free`ing the transaction. This includes
-        compaction and optimization of internal representation of updates, triggering events etc.
-        Ypy transactions are auto-committed when they are `free`d.
+        在不释放事务的情况下触发一系列更新后操作。这包括内部更新表示的压缩和优化，触发事件等。
+        Ypy 事务在被 `free` 时自动提交。
         """
+
     def state_vector_v1(self) -> EncodedStateVector:
         """
-        Encodes a state vector of a given transaction document into its binary representation using
-        lib0 v1 encoding. State vector is a compact representation of updates performed on a given
-        document and can be used by `encode_state_as_update` on remote peer to generate a delta
-        update payload to synchronize changes between peers.
+        将给定事务文档的状态向量编码为其二进制表示，使用 lib0 v1 编码。
+        状态向量是对在给定文档上执行的更新的紧凑表示，可以在远程对等体上使用 :meth:`encode_state_as_update` 生成增量更新有效负载，以同步对等体之间的更改。
 
-        Example::
+        示例::
 
             from y_py import YDoc
 
-            # document on machine A
+            # 机器 A 上的文档
             local_doc = YDoc()
             local_txn = local_doc.begin_transaction()
 
-            # document on machine B
+            # 机器 B 上的文档
             remote_doc = YDoc()
             remote_txn = local_doc.begin_transaction()
 
@@ -319,22 +307,21 @@ class YTransaction:
                 del remote_txn
 
         """
+
     def diff_v1(self, vector: Optional[EncodedStateVector] = None) -> YDocUpdate:
         """
-        Encodes all updates that have happened since a given version `vector` into a compact delta
-        representation using lib0 v1 encoding. If `vector` parameter has not been provided, generated
-        delta payload will contain all changes of a current Ypy document, working effectively as
-        its state snapshot.
+        将自给定版本 `vector` 以来发生的所有更新编码为紧凑的增量表示，使用 lib0 v1 编码。
+        如果未提供 `vector` 参数，则生成的增量有效负载将包含当前 Ypy 文档的所有更改，有效地作为其状态快照。
 
-        Example::
+        示例::
 
             from y_py import YDoc
 
-            # document on machine A
+            # 机器 A 上的文档
             local_doc = YDoc()
             local_txn = local_doc.begin_transaction()
 
-            # document on machine B
+            # 机器 B 上的文档
             remote_doc = YDoc()
             remote_txn = local_doc.begin_transaction()
 
@@ -346,20 +333,20 @@ class YTransaction:
                 del local_txn
                 del remote_txn
         """
+
     def apply_v1(self, diff: YDocUpdate):
         """
-        Applies delta update generated by the remote document replica to a current transaction's
-        document. This method assumes that a payload maintains lib0 v1 encoding format.
+        将由远程文档副本生成的增量更新应用于当前事务的文档。此方法假定有效负载保持 lib0 v1 编码格式。
 
-        Example::
+        示例::
 
             from y_py import YDoc
 
-            # document on machine A
+            # 机器 A 上的文档
             local_doc = YDoc()
             local_txn = local_doc.begin_transaction()
 
-            # document on machine B
+            # 机器 B 上的文档
             remote_doc = YDoc()
             remote_txn = local_doc.begin_transaction()
 
@@ -371,58 +358,55 @@ class YTransaction:
                 del local_txn
                 del remote_txn
         """
-    def __enter__() -> YTransaction: ...
-    def __exit__() -> bool: ...
+    def __enter__(self) -> YTransaction: ...
+    def __exit__(self) -> bool: ...
 
 class YText:
     """
-    A shared data type used for collaborative text editing. It enables multiple users to add and
-    remove chunks of text in efficient manner. This type is internally represented as able
-    double-linked list of text chunks - an optimization occurs during `YTransaction.commit`, which
-    allows to squash multiple consecutively inserted characters together as a single chunk of text
-    even between transaction boundaries in order to preserve more efficient memory model.
+    用于协作文本编辑的共享数据类型。它使多个用户能够高效地添加和删除文本块。
+    此类型在内部表示为能够双向链接的文本块列表——在 :meth:`YTransaction.commit` 期间会进行优化，
+    允许将多个连续插入的字符压缩为单个文本块，即使在事务边界之间，以保持更高效的内存模型。
 
-    `YText` structure internally uses UTF-8 encoding and its length is described in a number of
-    bytes rather than individual characters (a single UTF-8 code point can consist of many bytes).
+    :class:`YText` 结构在内部使用 UTF-8 编码，其长度以字节数而非单个字符表示（单个 UTF-8 码点可以由多个字节组成）。
 
-    Like all Yrs shared data types, `YText` is resistant to the problem of interleaving (situation
-    when characters inserted one after another may interleave with other peers concurrent inserts
-    after merging all updates together). In case of Yrs conflict resolution is solved by using
-    unique document id to determine correct and consistent ordering.
+    与所有 Yrs 共享数据类型一样， :class:`YText` 对交错问题具有抗性（即一个字符后接另一个字符的插入可能与其他对等体的并发插入交错，合并所有更新后）。在 Yrs 中，冲突解决通过使用唯一文档 ID 来确定正确和一致的顺序。
     """
 
     prelim: bool
-    """True if this element has not been integrated into a YDoc."""
+    """如果该元素尚未集成到 YDoc 中，则为 True 。"""
 
     def __init__(self, init: str = ""):
         """
-        Creates a new preliminary instance of a `YText` shared data type, with its state initialized
-        to provided parameter.
+        创建一个新的 `YText` 共享数据类型的初步实例，其状态初始化为提供的参数。
 
-        Preliminary instances can be nested into other shared data types such as `YArray` and `YMap`.
-        Once a preliminary instance has been inserted this way, it becomes integrated into Ypy
-        document store and cannot be nested again: attempt to do so will result in an exception.
+        初步实例可以嵌套到其他共享数据类型中，如 :class:`YArray` 和 :class:`YMap`。
+        一旦以这种方式插入，便会集成到 Ypy 文档存储中，无法再次嵌套：尝试这样做将导致异常。
         """
+
     def __str__(self) -> str:
         """
         Returns:
-            The underlying shared string stored in this data type.
+            存储在此数据类型中的底层共享字符串。
         """
+
     def __repr__(self) -> str:
         """
         Returns:
-            The string representation wrapped in 'YText()'
+            用 :class:`YText` 包装的字符串表示。
         """
+
     def __len__(self) -> int:
         """
         Returns:
-            The length of an underlying string stored in this `YText` instance, understood as a number of UTF-8 encoded bytes.
+            存储在此 :class:`YText` 实例中的底层字符串的长度，理解为 UTF-8 编码字节的数量。
         """
+
     def to_json(self) -> str:
         """
         Returns:
-            The underlying shared string stored in this data type.
+            存储在此数据类型中的底层共享字符串。
         """
+
     def insert(
         self,
         txn: YTransaction,
@@ -431,10 +415,11 @@ class YText:
         attributes: Dict[str, Any] = {},
     ):
         """
-        Inserts a string of text into the `YText` instance starting at a given `index`.
-        Attributes are optional style modifiers (`{"bold": True}`) that can be attached to the inserted string.
-        Attributes are only supported for a `YText` instance which already has been integrated into document store.
+        在给定的 `index` 开始位置将一段文本插入到 :class:`YText` 实例中。
+        属性是可选的样式修饰符（`{"bold": True}`），可以附加到插入的字符串。
+        属性仅支持已集成到文档存储中的 `YText` 实例。
         """
+
     def insert_embed(
         self,
         txn: YTransaction,
@@ -443,71 +428,77 @@ class YText:
         attributes: Dict[str, Any] = {},
     ):
         """
-        Inserts embedded content into the YText at the provided index. Attributes are user-defined metadata associated with the embedded content.
-        Attributes are only supported for a `YText` instance which already has been integrated into document store.
+        在提供的索引位置插入嵌入内容到 :class:`YText` 中。属性是与嵌入内容相关的用户定义元数据。
+        属性仅支持已集成到文档存储中的 :class:`YText` 实例。
         """
+
     def format(
         self, txn: YTransaction, index: int, length: int, attributes: Dict[str, Any]
     ):
         """
-        Wraps an existing piece of text within a range described by `index`-`length` parameters with
-        formatting blocks containing provided `attributes` metadata. This method only works for
-        `YText` instances that already have been integrated into document store
+        用包含提供的 `attributes` 元数据的格式块包装现有文本片段，该片段由 `index`-`length` 参数描述。
+        此方法仅对已集成到文档存储中的 :class:`YText` 实例有效。
         """
+
     def extend(self, txn: YTransaction, chunk: str):
         """
-        Appends a given `chunk` of text at the end of current `YText` instance.
+        在当前 :class:`YText` 实例的末尾附加给定的 `chunk` 文本。
         """
+
     def delete(self, txn: YTransaction, index: int):
         """
-        Deletes the character at the specified `index`.
+        删除指定 `index` 处的字符。
         """
+
     def delete_range(self, txn: YTransaction, index: int, length: int):
         """
-        Deletes a specified range of of characters, starting at a given `index`.
-        Both `index` and `length` are counted in terms of a number of UTF-8 character bytes.
+        删除从给定 `index` 开始的指定范围内的字符。
+        `index` 和 `length` 的计数以 UTF-8 字节数为单位。
         """
+
     def observe(self, f: Callable[[YTextEvent]]) -> SubscriptionId:
         """
-        Assigns a callback function to listen to YText updates.
+        将回调函数分配给监听 :class:`YText` 更新。
 
         Args:
-            f: Callback function that runs when the text object receives an update.
+            f: 当文本对象收到更新时运行的回调函数。
         Returns:
-            A reference to the callback subscription.
+            对回调订阅的引用。
         """
+
     def observe_deep(self, f: Callable[[List[Event]]]) -> SubscriptionId:
         """
-        Assigns a callback function to listen to the updates of the YText instance and those of its nested attributes.
-        Currently, this listens to the same events as YText.observe, but in the future this will also listen to
-        the events of embedded values.
+        将回调函数分配给监听 :class:`YText` 实例及其嵌套属性的更新。
+        目前，这将监听与 :meth:`YText.observe` 相同的事件，但将来也将监听嵌入值的事件。
 
         Args:
-            f: Callback function that runs when the text object or its nested attributes receive an update.
+            f: 当文本对象或其嵌套属性收到更新时运行的回调函数。
         Returns:
-            A reference to the callback subscription.
+            对回调订阅的引用。
         """
+
     def unobserve(self, subscription_id: SubscriptionId):
         """
-        Cancels the observer callback associated with the `subscripton_id`.
+        取消与 `subscription_id` 关联的观察者回调。
 
         Args:
-            subscription_id: reference to a subscription provided by the `observe` method.
+            subscription_id: :meth:`~YText.observe` 方法提供的订阅引用。
         """
 
 class YTextEvent:
     """
-    Communicates updates that occurred during a transaction for an instance of `YText`.
-    The `target` references the `YText` element that receives the update.
-    The `delta` is a list of updates applied by the transaction.
+    传达在 :class:`YText` 实例的事务期间发生的更新。
+    :attr:`~YTextEvent.target` 引用接收更新的 :class:`YText` 元素。
+    :attr:`~YTextEvent.delta` 是事务应用的更新列表。
     """
 
     target: YText
     delta: List[YTextDelta]
+
     def path(self) -> List[Union[int, str]]:
         """
         Returns:
-            Array of keys and indexes creating a path from root type down to current instance of shared type (accessible via `target` getter).
+            从根类型到当前共享类型实例的路径数组（可通过 :attr:`~YTextEvent.target` 获取器访问）。
         """
 
 YTextDelta = Union[YTextChangeInsert, YTextChangeDelete, YTextChangeRetain]
@@ -525,116 +516,110 @@ class YTextChangeRetain(TypedDict):
 
 class YArray:
     prelim: bool
-    """True if this element has not been integrated into a YDoc."""
+    """如果该元素尚未集成到 :class:`YDoc` 中，则为 True。"""
 
-    def __init__(init: Optional[Iterable[Any]] = None):
+    def __init__(self, init: Optional[Iterable[Any]] = None):
         """
-        Creates a new preliminary instance of a `YArray` shared data type, with its state
-        initialized to provided parameter.
+        创建一个新的 :class:`YArray` 共享数据类型的初步实例，其状态初始化为提供的参数。
 
-        Preliminary instances can be nested into other shared data types such as `YArray` and `YMap`.
-        Once a preliminary instance has been inserted this way, it becomes integrated into Ypy
-        document store and cannot be nested again: attempt to do so will result in an exception.
+        初步实例可以嵌套到其他共享数据类型中，如 :class:`YArray` 和 :class:`YMap`。
+        一旦初步实例以这种方式插入，它将集成到 Ypy 文档存储中，无法再次嵌套：尝试这样做将导致异常。
         """
     def __len__(self) -> int:
         """
         Returns:
-            Number of elements in the `YArray`
+            :class:`YArray` 中元素的数量。
         """
     def __str__(self) -> str:
         """
         Returns:
-            The string representation of YArray
+            :class:`YArray` 的字符串表示。
         """
     def __repr__(self) -> str:
         """
         Returns:
-            The string representation of YArray wrapped in `YArray()`
+            包裹在 :class:`YArray` 中的 `YArray` 的字符串表示。
         """
     def to_json(self) -> str:
         """
-        Converts an underlying contents of this `YArray` instance into their JSON representation.
+        将此 :class:`YArray` 实例的底层内容转换为其 JSON 表示。
         """
     def insert(self, txn: YTransaction, index: int, item: Any):
         """
-        Inserts an item at the provided index in the `YArray`.
+        在 :class:`YArray` 中的指定索引处插入一个项。
         """
     def insert_range(self, txn: YTransaction, index: int, items: Iterable):
         """
-        Inserts a given range of `items` into this `YArray` instance, starting at given `index`.
+        在给定的 `index` 处将指定范围的 `items` 插入到此 :class:`YArray` 实例中。
         """
     def append(self, txn: YTransaction, item: Any):
         """
-        Adds a single item to the end of the `YArray`
+        将单个项添加到 :class:`YArray` 的末尾。
         """
     def extend(self, txn: YTransaction, items: Iterable):
         """
-        Appends a sequence of `items` at the end of this `YArray` instance.
+        将一系列 `items` 附加到此 :class:`YArray` 实例的末尾。
         """
     def delete(self, txn: YTransaction, index: int):
         """
-        Deletes a single item from the array
+        从数组中删除单个项。
 
         Args:
-            txn: The transaction where the array is being modified.
-            index: The index of the element to be deleted.
+            txn: 正在修改数组的事务。
+            index: 要删除的元素的索引。
         """
     def delete_range(self, txn: YTransaction, index: int, length: int):
         """
-        Deletes a range of items of given `length` from current `YArray` instance,
-        starting from given `index`.
+        从当前 :class:`YArray` 实例中删除给定 `length` 的项范围，从给定的 `index` 开始。
         """
     def move_to(self, txn: YTransaction, source: int, target: int):
         """
-        Moves a single item found at `source` index into `target` index position.
+        将在 `source` 索引处找到的单个项移动到 `target` 索引位置。
 
         Args:
-            txn: The transaction where the array is being modified.
-            source: The index of the element to be moved.
-            target: The new position of the element.
+            txn: 正在修改数组的事务。
+            source: 要移动的元素的索引。
+            target: 元素的新位置。
         """
     def move_range_to(self, txn: YTransaction, start: int, end: int, target: int):
         """
-        Moves all elements found within `start`..`end` indexes range (both side inclusive) into
-        new position pointed by `target` index. All elements inserted concurrently by other peers
-        inside of moved range will be moved as well after synchronization (although it make take
-        more than one sync roundtrip to achieve convergence).
+        将 `start`..`end` 索引范围内的所有元素（两端均包含）移动到 `target` 索引指向的新位置。
+        同时插入的其他对等体在移动范围内的元素也将被移动，经过同步后（尽管可能需要多次同步往返才能实现收敛）。
 
         Args:
-            txn: The transaction where the array is being modified.
-            start: The index of the first element of the range (inclusive).
-            end: The index of the last element of the range (inclusive).
-            target: The new position of the element.
-        
-        Example:
-        ```
-        import y_py as Y
-        doc = Y.Doc();
-        array = doc.get_array('array')
+            txn: 正在修改数组的事务。
+            start: 范围第一个元素的索引（包含）。
+            end: 范围最后一个元素的索引（包含）。
+            target: 元素的新位置。
 
-        with doc.begin_transaction() as t:
-            array.insert_range(t, 0, [1,2,3,4]);
-        
-        // move elements 2 and 3 after the 4
-        with doc.begin_transaction() as t:
-            array.move_range_to(t, 1, 2, 4);
-        ```
+        示例::
+
+            import y_py as Y
+            doc = Y.Doc()
+            array = doc.get_array('array')
+
+            with doc.begin_transaction() as t:
+                array.insert_range(t, 0, [1,2,3,4])
+
+            # 将元素 2 和 3 移动到 4 之后
+            with doc.begin_transaction() as t:
+                array.move_range_to(t, 1, 2, 4)
         """
     def __getitem__(self, index: Union[int, slice]) -> Any:
         """
         Returns:
-            The element stored under given `index` or a new list of elements from the slice range.
+            存储在给定 `index` 下的元素或从切片范围生成的新元素列表。
         """
     def __iter__(self) -> Iterator:
         """
         Returns:
-            An iterator that can be used to traverse over the values stored withing this instance of `YArray`.
+            可用于遍历此 :class:`YArray` 实例中存储的值的迭代器。
 
-        Example::
+        示例::
 
             from y_py import YDoc
 
-            # document on machine A
+            # 在机器 A 上的文档
             doc = YDoc()
             array = doc.get_array('name')
 
@@ -643,254 +628,276 @@ class YArray:
         """
     def observe(self, f: Callable[[YArrayEvent]]) -> SubscriptionId:
         """
-        Assigns a callback function to listen to YArray updates.
+        分配一个回调函数以监听 :class:`YArray` 更新。
 
         Args:
-            f: Callback function that runs when the array object receives an update.
+            f: 在数组对象接收到更新时运行的回调函数。
         Returns:
-            An identifier associated with the callback subscription.
+            与回调订阅相关联的标识符。
         """
     def observe_deep(self, f: Callable[[List[Event]]]) -> SubscriptionId:
         """
-        Assigns a callback function to listen to the aggregated updates of the YArray and its child elements.
+        分配一个回调函数以监听 :class:`YArray` 及其子元素的聚合更新。
 
         Args:
-            f: Callback function that runs when the array object or components receive an update.
+            f: 在数组对象或组件接收到更新时运行的回调函数。
         Returns:
-            An identifier associated with the callback subscription.
+            与回调订阅相关联的标识符。
         """
     def unobserve(self, subscription_id: SubscriptionId):
         """
-        Cancels the observer callback associated with the `subscripton_id`.
+        取消与 `subscription_id` 相关联的观察者回调。
 
         Args:
-            subscription_id: reference to a subscription provided by the `observe` method.
+            subscription_id: 由 :meth:`~YArray.observe` 方法提供的订阅引用。
         """
 
 YArrayObserver = Any
 
 class YArrayEvent:
     """
-    Communicates updates that occurred during a transaction for an instance of `YArray`.
-    The `target` references the `YArray` element that receives the update.
-    The `delta` is a list of updates applied by the transaction.
+    传达在 :class:`YArray` 实例的事务期间发生的更新。
+    `target`: 引用接收更新的 :class:`YArray` 元素。
+    `delta`: 是事务应用的更新列表。
     """
 
     target: YArray
     delta: List[ArrayDelta]
     def path(self) -> List[Union[int, str]]:
         """
-        Returns:
-            Array of keys and indexes creating a path from root type down to current instance of shared type (accessible via `target` getter).
+        返回:
+            从根类型到当前共享类型实例的键和索引数组（通过 :attr:`~YArrayEvent.target` 获取）。
         """
 
 ArrayDelta = Union[ArrayChangeInsert, ArrayChangeDelete, ArrayChangeRetain]
-"""A modification to a YArray during a transaction."""
+"""在事务期间对 :class:`YArray` 的修改。"""
 
 class ArrayChangeInsert(TypedDict):
-    """Update message that elements were inserted in a YArray."""
+    """更新消息，表示元素已插入到 :class:`YArray` 中。"""
 
     insert: List[Any]
 
 class ArrayChangeDelete:
-    """Update message that elements were deleted in a YArray."""
+    """更新消息，表示元素已从 :class:`YArray` 中删除。"""
 
     delete: int
 
 class ArrayChangeRetain:
-    """Update message that elements were left unmodified in a YArray."""
+    """更新消息，表示元素在 :class:`YArray` 中未修改。"""
 
     retain: int
 
 class YMap:
     prelim: bool
-    """True if this element has not been integrated into a YDoc."""
-    def __init__(dict: dict):
-        """
-        Creates a new preliminary instance of a `YMap` shared data type, with its state
-        initialized to provided parameter.
+    """如果此元素尚未集成到 :class:`YDoc` 中，则为 True。"""
 
-        Preliminary instances can be nested into other shared data types such as `YArray` and `YMap`.
-        Once a preliminary instance has been inserted this way, it becomes integrated into Ypy
-        document store and cannot be nested again: attempt to do so will result in an exception.
+    def __init__(self, dict: dict):
         """
+        创建一个新的 `YMap` 共享数据类型的初步实例，其状态初始化为提供的参数。
+
+        初步实例可以嵌套到其他共享数据类型中，如 :class:`YArray` 和 :class:`YMap`。
+        一旦以这种方式插入初步实例，它将集成到 Ypy 文档存储中，无法再次嵌套：尝试这样做将导致异常。
+        """
+
     def __len__(self) -> int:
         """
         Returns:
-            The number of entries stored within this instance of `YMap`.
+            此 :class:`YMap` 实例中存储的条目数量。
         """
+
     def __str__(self) -> str:
         """
         Returns:
-            The string representation of the `YMap`.
+            :class:`YMap` 的字符串表示。
         """
 
     def __dict__(self) -> dict:
-         """
+        """
         Returns:
-            Contents of the `YMap` inside a Python dictionary.
+            :class:`YMap` 的内容作为 Python 字典。
         """
 
     def __repr__(self) -> str:
         """
         Returns:
-            The string representation of the `YMap` wrapped in 'YMap()'
+            :class:`YMap` 的字符串表示，包裹在 'YMap()' 中。
         """
+
     def to_json(self) -> str:
         """
-        Converts contents of this `YMap` instance into a JSON representation.
+        将此 :class:`YMap` 实例的内容转换为 JSON 表示。
         """
+
     def set(self, txn: YTransaction, key: str, value: Any):
         """
-        Sets a given `key`-`value` entry within this instance of `YMap`. If another entry was
-        already stored under given `key`, it will be overridden with new `value`.
+        在此 :class:`YMap` 实例中设置给定的 `key`-`value` 条目。如果已经存在给定 `key` 的条目，
+        则将其覆盖为新的 `value`。
         """
+
     def update(
         self, txn: YTransaction, items: Union[Iterable[Tuple[str, Any]], Dict[str, Any]]
     ):
         """
-        Updates `YMap` with the contents of items.
+        使用项目的内容更新 :class:`YMap`。
 
         Args:
-            txn: A transaction to perform the insertion updates.
-            items: An iterable object that produces key value tuples to insert into the YMap
+            txn: 执行插入更新的事务。
+            items: 生成要插入到 :class:`YMap` 中的键值元组的可迭代对象。
         """
+
     def pop(self, txn: YTransaction, key: str, fallback: Optional[Any] = None) -> Any:
         """
-        Removes an entry identified by a given `key` from this instance of `YMap`, if such exists.
-        Throws a KeyError if the key does not exist and fallback value is not provided.
+        从此 :class:`YMap` 实例中移除由给定 `key` 标识的条目（如果存在）。
+        如果该键不存在且未提供后备值，则抛出 KeyError。
 
         Args:
-            txn: The current transaction from a YDoc.
-            key: Identifier of the requested item.
-            fallback: Returns this value if the key doesn't exist in the YMap
+            txn: 当前 :class:`YDoc` 的事务。
+            key: 请求项目的标识符。
+            fallback: 如果 :class:`YMap` 中不存在该键，则返回该值。
 
         Returns:
-            The item at the key.
+            键对应的项目。
         """
+
     def get(self, key: str, fallback: Any) -> Any | None:
         """
         Args:
-            key: The identifier for the requested data.
-            fallback: If the key doesn't exist in the map, this fallback value will be returned.
+            key: 请求数据的标识符。
+            fallback: 如果该键不存在于映射中，则返回该后备值。
 
         Returns:
-            Requested data or the provided fallback value.
+            请求的数据或提供的后备值。
         """
+
     def __getitem__(self, key: str) -> Any:
         """
         Args:
-            key: The identifier for the requested data.
+            key: 请求数据的标识符。
 
         Returns:
-            Value of an entry stored under given `key` within this instance of `YMap`. Will throw a `KeyError` if the provided key is unassigned.
+            存储在此 :class:`YMap` 实例中给定 `key` 下的条目的值。如果提供的键未分配，将抛出 :py:exc:`KeyError`。
         """
+
     def __iter__(self) -> Iterator[str]:
         """
         Returns:
-            An iterator that traverses all keys of the `YMap` in an unspecified order.
+            遍历 :class:`YMap` 所有键的迭代器，顺序不确定。
         """
+
     def items(self) -> YMapItemsView:
         """
         Returns:
-            A view that can be used to iterate over all entries stored within this instance of `YMap`. Order of entry is not specified.
+            一个视图，可用于迭代此 :class:`YMap` 实例中存储的所有条目。条目的顺序未指定。
 
-        Example::
+        示例::
 
             from y_py import YDoc
 
-            # document on machine A
+            # 机器 A 上的文档
             doc = YDoc()
             map = doc.get_map('name')
             with doc.begin_transaction() as txn:
                 map.set(txn, 'key1', 'value1')
-                map.set(txn, 'key2', true)
-            for (key, value) in map.items()):
+                map.set(txn, 'key2', True)
+            for (key, value) in map.items():
                 print(key, value)
         """
+
     def keys(self) -> YMapKeysView:
         """
         Returns:
-            A view of all key identifiers in the YMap. The order of keys is not stable.
+            :class:`YMap` 中所有键标识符的视图。键的顺序不稳定。
         """
+
     def values(self) -> YMapValuesView:
         """
         Returns:
-            A view of all values in the YMap. The order of values is not stable.
+            :class:`YMap` 中所有值的视图。值的顺序不稳定。
         """
+
     def observe(self, f: Callable[[YMapEvent]]) -> SubscriptionId:
         """
-        Assigns a callback function to listen to YMap updates.
+        分配一个回调函数，以监听 :class:`YMap` 更新。
 
         Args:
-            f: Callback function that runs when the map object receives an update.
+            f: 当映射对象接收更新时运行的回调函数。
         Returns:
-            A reference to the callback subscription. Delete this observer in order to erase the associated callback function.
+            与回调订阅相关的引用。删除此观察者以擦除关联的回调函数。
         """
+
     def observe_deep(self, f: Callable[[List[Event]]]) -> SubscriptionId:
         """
-        Assigns a callback function to listen to YMap and child element updates.
+        分配一个回调函数，以监听 :class:`YMap` 和子元素的更新。
 
         Args:
-            f: Callback function that runs when the map object or any of its tracked elements receive an update.
+            f: 当映射对象或其任何跟踪元素接收更新时运行的回调函数。
         Returns:
-            A reference to the callback subscription. Delete this observer in order to erase the associated callback function.
+            与回调订阅相关的引用。删除此观察者以擦除关联的回调函数。
         """
+
     def unobserve(self, subscription_id: SubscriptionId):
         """
-        Cancels the observer callback associated with the `subscripton_id`.
+        取消与 `subscription_id` 相关的观察者回调。
 
         Args:
-            subscription_id: reference to a subscription provided by the `observe` method.
+            subscription_id: 由 :meth:`~YMap.observe` 方法提供的订阅引用。
         """
 
 class YMapItemsView:
-    """Tracks key/values inside a YMap. Similar functionality to dict_items for a Python dict"""
+    """跟踪 :class:`YMap` 内的键/值。类似于 Python 字典的 dict_items 功能。"""
 
-    def __iter__() -> Iterator[Tuple[str, Any]]:
-        """Produces key value tuples of elements inside the view"""
-    def __contains__() -> bool:
-        """Checks membership of kv tuples in the view"""
-    def __len__() -> int:
-        """Checks number of items in the view."""
+    def __iter__(self) -> Iterator[Tuple[str, Any]]:
+        """生成视图内元素的键值元组。"""
+
+    def __contains__(self, item: Tuple[str, Any]) -> bool:
+        """检查键值元组是否在视图中。"""
+
+    def __len__(self) -> int:
+        """检查视图中的项目数量。"""
 
 class YMapKeysView:
-    """Tracks key identifiers inside of a YMap"""
+    """跟踪 :class:`YMap` 内的键标识符。"""
 
-    def __iter__() -> Iterator[str]:
-        """Produces keys of the view"""
-    def __contains__() -> bool:
-        """Checks membership of keys in the view"""
-    def __len__() -> int:
-        """Checks number of keys in the view."""
+    def __iter__(self) -> Iterator[str]:
+        """生成视图的键。"""
+
+    def __contains__(self, key: str) -> bool:
+        """检查键是否在视图中。"""
+
+    def __len__(self) -> int:
+        """检查视图中的键数量。"""
 
 class YMapValuesView:
-    """Tracks values inside of a YMap"""
+    """跟踪 :class:`YMap` 内的值。"""
 
-    def __iter__() -> Iterator[Any]:
-        """Produces values of the view"""
-    def __contains__() -> bool:
-        """Checks membership of values in the view"""
-    def __len__() -> int:
-        """Checks number of values in the view."""
+    def __iter__(self) -> Iterator[Any]:
+        """生成视图的值。"""
+
+    def __contains__(self, value: Any) -> bool:
+        """检查值是否在视图中。"""
+
+    def __len__(self) -> int:
+        """检查视图中的值数量。"""
 
 class YMapEvent:
     """
-    Communicates updates that occurred during a transaction for an instance of `YMap`.
-    The `target` references the `YMap` element that receives the update.
-    The `delta` is a list of updates applied by the transaction.
-    The `keys` are a list of changed values for a specific key.
+    通信在 :class:`YMap` 实例的事务期间发生的更新。
+    `target` 引用接收更新的 `YMap` 元素。
+    `delta` 是事务应用的更新列表。
+    `keys` 是特定键的更改值列表。
     """
 
     target: YMap
-    """The element modified during this event."""
+    """在此事件中修改的元素。"""
+
     keys: Dict[str, YMapEventKeyChange]
-    """A list of modifications to the YMap by key. 
-    Includes the type of modification along with the before and after state."""
+    """按键对 :class:`YMap` 的修改列表。
+    包括修改类型以及修改前后的状态。"""
+
     def path(self) -> List[Union[int, str]]:
         """
         Returns:
-            Path to this element from the root if this YMap is nested inside another data structure.
+            如果此 :class:`YMap` 嵌套在另一个数据结构中，则从根到此元素的路径。
         """
 
 class YMapEventKeyChange(TypedDict):
@@ -899,37 +906,35 @@ class YMapEventKeyChange(TypedDict):
     newValue: Optional[Any]
 
 YXmlAttributes = Iterator[Tuple[str, str]]
-"""Generates a sequence of key/value properties for an XML Element"""
+"""生成 XML 元素的键/值属性序列。"""
 
 Xml = Union[YXmlElement, YXmlText]
 YXmlTreeWalker = Iterator[Xml]
-"""Visits elements in an Xml tree"""
+"""访问 XML 树中的元素。"""
 EntryChange = Dict[Literal["action", "newValue", "oldValue"], Any]
 
 class YXmlElementEvent:
     target: YXmlElement
     keys: Dict[str, EntryChange]
     delta: List[Dict]
+
     def path(self) -> List[Union[int, str]]:
         """
-        Returns a current shared type instance, that current event changes refer to.
+        返回当前共享类型实例，当前事件更改所指。
         """
 
 class YXmlElement:
     """
-    XML element data type. It represents an XML node, which can contain key-value attributes
-    (interpreted as strings) as well as other nested XML elements or rich text (represented by
-    `YXmlText` type).
+    XML 元素数据类型。它表示一个 XML 节点，可以包含键值属性（解释为字符串），
+    以及其他嵌套的 XML 元素或富文本（由 `YXmlText` 类型表示）。
 
-    In terms of conflict resolution, `YXmlElement` uses following rules:
+    在冲突解决方面，:class:`YXmlElement` 使用以下规则：
 
-    - Attribute updates use logical last-write-wins principle, meaning the past updates are
-      automatically overridden and discarded by newer ones, while concurrent updates made by
-      different peers are resolved into a single value using document id seniority to establish
-      an order.
-    - Child node insertion uses sequencing rules from other Yrs collections - elements are inserted
-      using interleave-resistant algorithm, where order of concurrent inserts at the same index
-      is established using peer's document id seniority.
+    - 属性更新使用逻辑的最后写入优先原则，意味着过去的更新会被新的更新
+      自动覆盖并丢弃，而不同节点的并发更新将通过文档 ID 的优先级来建立
+      顺序，解析为单个值。
+    - 子节点插入使用其他 Yrs 集合的序列化规则——元素通过抗交错算法插入，
+      在相同索引的并发插入顺序通过节点的文档 ID 优先级来建立。
     """
 
     name: str
@@ -937,10 +942,12 @@ class YXmlElement:
     next_sibling: Optional[Xml]
     prev_sibling: Optional[Xml]
     parent: Optional[YXmlElement]
+
     def __len__(self) -> int:
         """
-        Returns a number of child XML nodes stored within this `YXMlElement` instance.
+        返回此 :class:`YXmlElement` 实例中存储的子 XML 节点数量。
         """
+
     def insert_xml_element(
         self,
         txn: YTransaction,
@@ -948,90 +955,105 @@ class YXmlElement:
         name: str,
     ) -> YXmlElement:
         """
-        Inserts a new instance of `YXmlElement` as a child of this XML node and returns it.
+        将一个新的 :class:`YXmlElement` 实例作为此 XML 节点的子节点插入并返回它。
         """
+
     def insert_xml_text(self, txn: YTransaction, index: int) -> YXmlText:
         """
-        Inserts a new instance of `YXmlText` as a child of this XML node and returns it.
+        将一个新的 :class:`YXmlText` 实例作为此 XML 节点的子节点插入并返回它。
         """
+
     def delete(self, txn: YTransaction, index: int, length: int):
         """
-        Removes a range of children XML nodes from this `YXmlElement` instance,
-        starting at given `index`.
+        从此 :class:`YXmlElement` 实例中移除一范围的子 XML 节点，
+        从给定的 `index` 开始。
         """
+
     def push_xml_element(self, txn: YTransaction, name: str) -> YXmlElement:
         """
-        Appends a new instance of `YXmlElement` as the last child of this XML node and returns it.
+        将一个新的 :class:`YXmlElement` 实例附加为此 XML 节点的最后一个子节点并返回它。
         """
+
     def push_xml_text(self, txn: YTransaction) -> YXmlText:
         """
-        Appends a new instance of `YXmlText` as the last child of this XML node and returns it.
+        将一个新的 :class:`YXmlText` 实例附加为此 XML 节点的最后一个子节点并返回它。
         """
+
     def __str__(self) -> str:
         """
         Returns:
-            A string representation of this XML node.
+            此 XML 节点的字符串表示。
         """
+
     def __repr__(self) -> str:
         """
         Returns:
-            A string representation wrapped in YXmlElement
+            用 :class:`YXmlElement` 包裹的字符串表示。
         """
+
     def set_attribute(self, txn: YTransaction, name: str, value: str):
         """
-        Sets a `name` and `value` as new attribute for this XML node. If an attribute with the same
-        `name` already existed on that node, its value with be overridden with a provided one.
+        将 `name` 和 `value` 设置为此 XML 节点的新属性。
+        如果节点上已存在同名的属性，其值将被提供的值覆盖。
         """
+
     def get_attribute(self, name: str) -> Optional[str]:
         """
-        Returns a value of an attribute given its `name`. If no attribute with such name existed,
-        `null` will be returned.
+        Returns:
+            返回给定 `name` 的属性值。如果没有该名称的属性，将返回 ``null`` 。
         """
+
     def remove_attribute(self, txn: YTransaction, name: str):
         """
-        Removes an attribute from this XML node, given its `name`.
+        根据其 `name` 从此 XML 节点移除一个属性。
         """
+
     def attributes(self) -> YXmlAttributes:
         """
-        Returns an iterator that enables to traverse over all attributes of this XML node in
-        unspecified order.
+        Returns:
+            返回一个迭代器，使其能够以未指定的顺序遍历此 XML 节点的所有属性。
         """
+
     def tree_walker(self) -> YXmlTreeWalker:
         """
-        Returns an iterator that enables a deep traversal of this XML node - starting from first
-        child over this XML node successors using depth-first strategy.
+        Returns:
+            返回一个迭代器，使其能够对该 XML 节点进行深度遍历——
+            从第一个子节点开始，使用深度优先策略遍历此 XML 节点的后续节点。
         """
+
     def observe(self, f: Callable[[YXmlElementEvent]]) -> SubscriptionId:
         """
-        Subscribes to all operations happening over this instance of `YXmlElement`. All changes are
-        batched and eventually triggered during transaction commit phase.
+        订阅对此 :class:`YXmlElement` 实例发生的所有操作。所有更改被
+        批处理，并在事务提交阶段最终触发。
 
         Args:
-            f: A callback function that receives update events.
+            f: 接收更新事件的回调函数。
         Returns:
-            A `SubscriptionId` that can be used to cancel the observer callback.
+            可用于取消观察者回调的 :class:`SubscriptionId`。
         """
+
     def observe_deep(self, f: Callable[[List[Event]]]) -> SubscriptionId:
         """
-        Subscribes to all operations happening over this instance of `YXmlElement` and its children. All changes are
-        batched and eventually triggered during transaction commit phase.
+        订阅对此 `YXmlElement` 实例及其子节点发生的所有操作。所有更改被
+        批处理，并在事务提交阶段最终触发。
 
         Args:
-            f: A callback function that receives update events from the Xml element and its children.
+            f: 接收 XML 元素及其子元素更新事件的回调函数。
         Returns:
-            A `SubscriptionId` that can be used to cancel the observer callback.
+            可用于取消观察者回调的 :class:`SubscriptionId`。
         """
+
     def unobserve(self, subscription_id: SubscriptionId):
         """
-        Cancels the observer callback associated with the `subscripton_id`.
+        取消与 `subscription_id` 相关的观察者回调。
 
         Args:
-            subscription_id: reference to a subscription provided by the `observe` method.
+            subscription_id: :meth:`~YXmlElement:observe` 方法提供的订阅引用。
         """
 
 class YXmlFragment:
     """
-    XML fragment data type. It represents a collection of XML nodes.
+    XML 片段数据类型。它表示一组 XML 节点。
     """
 
     first_child: Optional[Xml]
@@ -1039,8 +1061,9 @@ class YXmlFragment:
 
     def __len__(self) -> int:
         """
-        Returns a number of child XML nodes stored within this `YXmlFragment` instance.
+        返回此 :class:`YXmlFragment` 实例中存储的子 XML 节点数量。
         """
+
     def insert_xml_element(
         self,
         txn: YTransaction,
@@ -1048,160 +1071,182 @@ class YXmlFragment:
         name: str,
     ) -> YXmlElement:
         """
-        Inserts a new instance of `YXmlElement` as a child of this XML fragment and returns it.
+        将一个新的 :class:`YXmlElement` 实例作为此 XML 片段的子节点插入并返回它。
         """
+
     def insert_xml_text(self, txn: YTransaction, index: int) -> YXmlText:
         """
-        Inserts a new instance of `YXmlText` as a child of this XML fragment and returns it.
+        将一个新的 :class:`YXmlText` 实例作为此 XML 片段的子节点插入并返回它。
         """
+
     def delete(self, txn: YTransaction, index: int, length: int):
         """
-        Removes a range of children XML nodes from this `YXmlFragment` instance,
-        starting at given `index`.
+        从此 :class:`YXmlFragment` 实例中移除一范围的子 XML 节点，
+        从给定的 `index` 开始。
         """
+
     def push_xml_element(self, txn: YTransaction, name: str) -> YXmlElement:
         """
-        Appends a new instance of `YXmlElement` as the last child of this XML fragment and returns it.
+        将一个新的 :class:`YXmlElement` 实例附加为此 XML 片段的最后一个子节点并返回它。
         """
+
     def push_xml_text(self, txn: YTransaction) -> YXmlText:
         """
-        Appends a new instance of `YXmlText` as the last child of this XML fragment and returns it.
+        将一个新的 :class:`YXmlText` 实例附加为此 XML 片段的最后一个子节点并返回它。
         """
+
     def __str__(self) -> str:
         """
         Returns:
-            A string representation of this XML fragment.
+            此 XML 片段的字符串表示。
         """
+
     def __repr__(self) -> str:
         """
         Returns:
-            A string representation of this YXmlFragment
+            此 :class:`YXmlFragment` 的字符串表示。
         """
+
     def get(self, index: int) -> Union[YXmlText, YXmlElement]:
         """
-        Returns the child node at the specified index.
+        返回指定索引处的子节点。
         """
+
     def tree_walker(self) -> YXmlTreeWalker:
         """
-        Returns an iterator that enables a deep traversal of this XML fragment - starting from first
-        child over this XML fragment successors using depth-first strategy.
+        返回一个迭代器，使其能够对该 XML 片段进行深度遍历——
+        从第一个子节点开始，使用深度优先策略遍历此 XML 片段的后续节点。
         """
+
     def observe(self, f: Callable[[YXmlElementEvent]]) -> SubscriptionId:
         """
-        Subscribes to all operations happening over this instance of `YXmlFragment`. All changes are
-        batched and eventually triggered during transaction commit phase.
+        订阅对此 :class:`YXmlFragment` 实例发生的所有操作。所有更改被
+        批处理，并在事务提交阶段最终触发。
 
         Args:
-            f: A callback function that receives update events.
+            f: 接收更新事件的回调函数。
         Returns:
-            A `SubscriptionId` that can be used to cancel the observer callback.
+            可用于取消观察者回调的 :class:`SubscriptionId`。
         """
+
     def observe_deep(self, f: Callable[[List[Event]]]) -> SubscriptionId:
         """
-        Subscribes to all operations happening over this instance of `YXmlFragment` and its children. All changes are
-        batched and eventually triggered during transaction commit phase.
+        订阅对此 :class:`YXmlFragment` 实例及其子节点发生的所有操作。所有更改被
+        批处理，并在事务提交阶段最终触发。
 
         Args:
-            f: A callback function that receives update events from the Xml fragment and its children.
+            f: 接收 XML 片段及其子元素更新事件的回调函数。
         Returns:
-            A `SubscriptionId` that can be used to cancel the observer callback.
+            可用于取消观察者回调的 :class:`SubscriptionId`。
         """
+
     def unobserve(self, subscription_id: SubscriptionId):
         """
-        Cancels the observer callback associated with the `subscripton_id`.
+        取消与 `subscription_id` 相关的观察者回调。
 
         Args:
-            subscription_id: reference to a subscription provided by the `observe` method.
+            subscription_id: :meth:`~YXmlFragment.observe` 方法提供的订阅引用。
         """
 
 class YXmlText:
     next_sibling: Optional[Xml]
     prev_sibling: Optional[Xml]
     parent: Optional[YXmlElement]
-    def __len__():
+
+    def __len__(self):
         """
         Returns:
-            The length of an underlying string stored in this `YXmlText` instance, understood as a number of UTF-8 encoded bytes.
+            此 :class:`YXmlText` 实例中存储的底层字符串的长度，以 UTF-8 编码字节数表示。
         """
+
     def insert(self, txn: YTransaction, index: int, chunk: str):
         """
-        Inserts a given `chunk` of text into this `YXmlText` instance, starting at a given `index`.
+        将给定的 `chunk` 文本插入到此 :class:`YXmlText` 实例中，从给定的 `index` 开始。
         """
+
     def push(self, txn: YTransaction, chunk: str):
         """
-        Appends a given `chunk` of text at the end of `YXmlText` instance.
+        将给定的 `chunk` 文本附加到 :class:`YXmlText` 实例的末尾。
         """
+
     def delete(self, txn: YTransaction, index: int, length: int):
         """
-        Deletes a specified range of of characters, starting at a given `index`.
-        Both `index` and `length` are counted in terms of a number of UTF-8 character bytes.
+        删除从给定 `index` 开始的指定范围的字符。
+        `index` 和 `length` 都以 UTF-8 字符字节数为单位进行计数。
         """
+
     def __str__(self) -> str:
         """
         Returns:
-            The underlying string stored in this `YXmlText` instance.
+            此 :class:`YXmlText` 实例中存储的底层字符串。
         """
+
     def __repr__(self) -> str:
         """
         Returns:
-            The string representation wrapped in 'YXmlText()'
+            用 'YXmlText()' 包裹的字符串表示。
         """
+
     def set_attribute(self, txn: YTransaction, name: str, value: str):
         """
-        Sets a `name` and `value` as new attribute for this XML node. If an attribute with the same
-        `name` already existed on that node, its value with be overridden with a provided one.
+        将 `name` 和 `value` 作为此 XML 节点的新属性设置。如果该节点上已经存在相同
+        `name` 的属性，则其值将被提供的值覆盖。
         """
+
     def get_attribute(self, name: str) -> Optional[str]:
         """
         Returns:
-            A value of an attribute given its `name`. If no attribute with such name existed,
-        `None` will be returned.
+            给定 `name` 的属性值。如果不存在该名称的属性，
+            将返回 `None`。
         """
+
     def remove_attribute(self, txn: YTransaction, name: str):
         """
-        Removes an attribute from this XML node, given its `name`.
+        从此 XML 节点中移除给定 `name` 的属性。
         """
+
     def attributes(self) -> YXmlAttributes:
         """
         Returns:
-            An iterator that enables to traverse over all attributes of this XML node in
-        unspecified order.
+            一个迭代器，使其能够以不指定顺序遍历此 XML 节点的所有属性。
         """
+
     def observe(self, f: Callable[[YXmlTextEvent]]) -> SubscriptionId:
         """
-        Subscribes to all operations happening over this instance of `YXmlText`. All changes are
-        batched and eventually triggered during transaction commit phase.
+        订阅对此 :class:`YXmlText` 实例发生的所有操作。所有更改被
+        批处理，并在事务提交阶段最终触发。
 
-        Args:
-            f: A callback function that receives update events.
-            deep: Determines whether observer is triggered by changes to elements in the YXmlText.
+        参数:
+            f: 接收更新事件的回调函数。
         Returns:
-            A `SubscriptionId` that can be used to cancel the observer callback.
+            可用于取消观察者回调的 :class:`SubscriptionId`。
         """
+
     def observe_deep(self, f: Callable[[List[Event]]]) -> SubscriptionId:
         """
-        Subscribes to all operations happening over this instance of `YXmlText` and its children. All changes are
-        batched and eventually triggered during transaction commit phase.
+        订阅对此 `YXmlText` 实例及其子元素发生的所有操作。所有更改被
+        批处理，并在事务提交阶段最终触发。
 
-        Args:
-            f: A callback function that receives update events of this element and its descendants.
-            deep: Determines whether observer is triggered by changes to elements in the YXmlText.
+        参数:
+            f: 接收此元素及其后代更新事件的回调函数。
         Returns:
-            A `SubscriptionId` that can be used to cancel the observer callback.
+            可用于取消观察者回调的 :class:`SubscriptionId`。
         """
+
     def unobserve(self, subscription_id: SubscriptionId):
         """
-        Cancels the observer callback associated with the `subscripton_id`.
+        取消与 `subscription_id` 相关的观察者回调。
 
         Args:
-            subscription_id: reference to a subscription provided by the `observe` method.
+            subscription_id: :meth:`~YXmlText.observe` 方法提供的订阅引用。
         """
 
 class YXmlTextEvent:
     target: YXmlText
     keys: List[EntryChange]
     delta: List[YTextDelta]
+
     def path(self) -> List[Union[int, str]]:
         """
-        Returns a current shared type instance, that current event changes refer to.
+        返回当前事件更改所指的当前共享类型实例。
         """

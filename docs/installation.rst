@@ -1,12 +1,13 @@
-Installation
+安装
 ============
-You can install Ypy from PyPI:
+
+你可以从PyPI安装Ypy:
 
 .. code-block:: bash
 
     pip install y-py
 
-Or from conda:
+或者从 conda:
 
 .. code-block:: bash
 

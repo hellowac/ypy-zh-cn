@@ -25,6 +25,7 @@ author = "Kevin Jahns, Bartosz Sypytkowski, John Waidhofer"
 # The full version, including alpha/beta/rc tags
 release = "0.5.5"
 
+language = "zh_CN"
 
 # -- General configuration ---------------------------------------------------
 
@@ -39,6 +40,8 @@ extensions = [
 autoapi_type = "python"
 autoapi_dirs = [".."]
 autoapi_file_patterns = ["*.pyi"]
+autoapi_python_class_content = "both"
+autoapi_template_dir = "_autoapi_template"
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -47,7 +50,15 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "tests", "docs"]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "tests",
+    "docs",
+    "_autoapi_template",
+    "modules.rst",
+]
 
 autoapi_ignore = exclude_patterns
 
@@ -62,3 +73,5 @@ html_theme = "furo"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+suppress_warnings = ["docutils"]

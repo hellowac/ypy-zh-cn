@@ -2,34 +2,34 @@
 
 # Ypy
 
-Ypy is a Python binding for Y-CRDT. It provides distributed data types that enable real-time collaboration between devices. Ypy can sync data with any other platform that has a Y-CRDT binding, allowing for seamless cross-domain communication. The library is a thin wrapper around Yrs, taking advantage of the safety and performance of Rust.
+Ypy 是 Y-CRDT 的 Python 绑定。它提供分布式数据类型，使设备之间能够实时协作。Ypy 可以与任何其他具有 Y-CRDT 绑定的平台同步数据，从而实现无缝的跨域通信。该库是 Yrs 的一个轻量级封装，利用了 Rust 的安全性和性能。
 
-> [We are looking for a maintainer 👀](https://github.com/y-crdt/ypy/issues/148)
+> [我们正在寻找维护者 👀](https://github.com/y-crdt/ypy/issues/148)
 
-## Installation
+## 安装
 
 ```
 pip install y-py
 ```
 
-## Getting Started
+## 开始使用
 
-Ypy provides many of the same shared data types as [Yjs](https://docs.yjs.dev/). All objects are shared within a `YDoc` and get modified within a transaction block.
+Ypy 提供了许多与 [Yjs](https://docs.yjs.dev/) 相同的共享数据类型。所有对象都在 `YDoc` 内共享，并在事务块内进行修改。
 
 ```python
 import y_py as Y
 
 d1 = Y.YDoc()
-# Create a new YText object in the YDoc
+# 在 YDoc 中创建一个新的 YText 对象
 text = d1.get_text('test')
-# Start a transaction in order to update the text
+# 开始一个事务以更新文本
 with d1.begin_transaction() as txn:
-    # Add text contents
+    # 添加文本内容
     text.extend(txn, "hello world!")
 
-# Create another document
+# 创建另一个文档
 d2 = Y.YDoc()
-# Share state with the original document
+# 与原始文档共享状态
 state_vector = Y.encode_state_vector(d2)
 diff = Y.encode_state_as_update(d1, state_vector)
 Y.apply_update(d2, diff)
@@ -39,48 +39,48 @@ value = str(d2.get_text('test'))
 assert value == "hello world!"
 ```
 
-## Development Setup
+## 开发设置
 
-0. Install [Rust](https://www.rust-lang.org/tools/install) and [Python](https://www.python.org/downloads/)
-1. Install `maturin` in order to build Ypy: `pip install maturin`
-2. Create a development build of the library: `maturin develop`
+0. 安装 [Rust](https://www.rust-lang.org/tools/install) 和 [Python](https://www.python.org/downloads/)
+1. 安装 `maturin` 以构建 Ypy: `pip install maturin`
+2. 创建库的开发版本: `maturin develop`
 
-## Tests
+## 测试
 
-All tests are located in `/tests`. To run the tests, install `pytest` and run the command line tool from the project root:
+所有测试位于 `/tests`。要运行测试，请安装 `pytest` 并从项目根目录运行命令行工具：
 
 ```
 pip install pytest
 pytest
 ```
 
-## Using Hatch
+## 使用 Hatch
 
-If you are using `hatch`, there is a `test` environment matrix defined in `pyproject.toml` that will run commands in virtual environments for `py37` through `py312`.
+如果您使用 `hatch`，则在 `pyproject.toml` 中定义了一个 `test` 环境矩阵，将在 `py37` 到 `py312` 的虚拟环境中运行命令。
 
 ```
 hatch run test:maturin develop
 hatch run test:pytest
 ```
 
-## Build Ypy 
+## 构建 Ypy
 
-Build the library as a wheel and store them in `target/wheels`:
+将库构建为 wheel，并存储在 `target/wheels` 中：
 
 ```
 maturin build
 ```
 
-## Ypy in WASM (Pyodide)
+## Ypy 在 WASM (Pyodide) 中
 
-As a Rust-based library, Ypy cannot build "pure Python" wheels. CI processes build and upload a number of wheels to PyPI, but PyPI does not support hosting `emscripten` / `wasm32` wheels necessary to import in Pyodide (see https://github.com/pypi/warehouse/issues/10416 for more info and updates). For now, Ypy will build `emscripten` wheels and attach the binaries as assets in the appropriate [Releases](https://github.com/y-crdt/ypy/releases) entry. Unfortunately, trying to install directly from the Github download link will result in a CORS error, so you'll need to use a proxy to pull in the binary and write / install from emscripten file system or host the binary somewhere that is CORS accessible for your application.
+作为一个基于 Rust 的库，Ypy 无法构建“纯 Python” wheel。CI 过程会构建并上传多个 wheel 到 PyPI，但 PyPI 不支持托管 `emscripten` / `wasm32` wheel，这对于在 Pyodide 中导入是必要的（有关更多信息和更新，请参见 https://github.com/pypi/warehouse/issues/10416 ）。目前，Ypy 将构建 `emscripten` wheels，并将二进制文件作为资产附加到相应的 [Releases](https://github.com/y-crdt/ypy/releases) 条目中。不幸的是，直接从 Github 下载链接安装会导致 CORS 错误，因此您需要使用代理来获取二进制文件，并从 emscripten 文件系统进行写入/安装，或者将二进制文件托管在您的应用程序可以访问的 CORS 位置。
 
-You can try out Ypy in Pyodide using the [terminal emulator at pyodide.org](https://pyodide.org/en/stable/console.html):
+您可以使用 [pyodide.org 的终端模拟器](https://pyodide.org/en/stable/console.html) 在 Pyodide 中试用 Ypy：
 
 ```
-Welcome to the Pyodide terminal emulator 🐍
-Python 3.10.2 (main, Sep 15 2022 23:28:12) on WebAssembly/Emscripten
-Type "help", "copyright", "credits" or "license" for more information.
+欢迎来到 Pyodide 终端模拟器 🐍
+Python 3.10.2 (main, Sep 15 2022 23:28:12) 在 WebAssembly/Emscripten 上
+输入 "help", "copyright", "credits" 或 "license" 获取更多信息。
 >>> wheel_url = 'https://github.com/y-crdt/ypy/releases/download/v0.5.5/y_py-0.5.5-cp310-cp310-emscripten_3_1_14_wasm32.whl'
 >>> wheel_name = wheel_url.split('/')[-1]
 >>> wheel_name
