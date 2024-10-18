@@ -1,0 +1,11 @@
+API 参考
+=============
+
+此页面包含自动生成的 API 参考文档 [#f1]_ 。
+
+.. toctree::
+   :titlesonly:
+
+   /autoapi/y_py/index
+
+.. [#f1] 使用 `sphinx-autoapi <https://github.com/readthedocs/sphinx-autoapi>`_ 创建。
