@@ -22,7 +22,7 @@ jobs:
           pip install .
       - name: 安装依赖2
         run: |
-          pip install sphinx sphinx_rtd_theme furo
+          pip install sphinx sphinx_rtd_theme furo sphinx-autoapi
       - name: Sphinx 构建
         working-directory: ./
         run: |
